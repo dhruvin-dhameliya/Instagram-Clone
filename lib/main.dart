@@ -5,6 +5,7 @@ import 'package:instaclon_flutterfire/responsive/mobail_screen_layout.dart';
 import 'package:instaclon_flutterfire/responsive/responsive_layout_screen.dart';
 import 'package:instaclon_flutterfire/responsive/web_screen_layout.dart';
 import 'package:instaclon_flutterfire/screen/login_screen.dart';
+import 'package:instaclon_flutterfire/screen/sign_up_screen.dart';
 import 'package:instaclon_flutterfire/util/colors.dart';
 
 void main() async {
@@ -12,6 +13,7 @@ void main() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
+        // must add for web project
         apiKey: "AIzaSyCxOdjJd6YIMk3Xo6IskWdDAVjriFt8ePM",
         authDomain: "instaclone-flutterfire.firebaseapp.com",
         projectId: "instaclone-flutterfire",
@@ -39,7 +41,12 @@ class MyApp extends StatelessWidget {
       //   webScreenLayout: webScreenLayout(),
       //   mobailScreenLayout: mobailScreenLayout(),
       // ),
-      home: LoginScreen(),
+      home: const SignUpScreen(),
+      initialRoute: '/signUpPage',
+      routes: {
+        '/loginPage': (context) => LoginScreen(),
+        '/signUpPage': (context) => SignUpScreen(),
+      },
     );
   }
 }

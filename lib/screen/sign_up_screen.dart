@@ -1,24 +1,42 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:instaclon_flutterfire/resources/auth_method.dart';
 import 'package:instaclon_flutterfire/util/colors.dart';
+import 'package:instaclon_flutterfire/util/util.dart';
 import 'package:instaclon_flutterfire/widgets/text_fild_input.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _fullnameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  Uint8List? _image;
 
   @override
   void dispose() {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _fullnameController.dispose();
+    _usernameController.dispose();
+  }
+
+  void selectImage() async {
+    Uint8List im = await pickImage(ImageSource.gallery);
+    // Uint8List im2 = await pickImage(ImageSource.camera);
+    setState(() {
+      _image = im;
+    });
   }
 
   @override
@@ -39,10 +57,46 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 64,
               ),
               const SizedBox(height: 64),
+              Stack(
+                children: [
+                  _image != null
+                      ? CircleAvatar(
+                          radius: 64,
+                          backgroundImage: MemoryImage(_image!),
+                        )
+                      : const CircleAvatar(
+                          radius: 64,
+                          backgroundImage:
+                              AssetImage('assets/img/person_vector.png'),
+                        ),
+                  Positioned(
+                    bottom: -8,
+                    left: 80,
+                    child: IconButton(
+                      onPressed: () {
+                        selectImage();
+                      },
+                      icon: const Icon(Icons.add_a_photo),
+                      color: Colors.grey[300],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+              TextFildInput(
+                  textEditingController: _fullnameController,
+                  myHintText: "Full Name",
+                  textInputType: TextInputType.text),
+              const SizedBox(height: 18),
               TextFildInput(
                   textEditingController: _emailController,
-                  myHintText: "Phone number, username, or email",
+                  myHintText: "Mobile Number or Email",
                   textInputType: TextInputType.emailAddress),
+              const SizedBox(height: 18),
+              TextFildInput(
+                  textEditingController: _usernameController,
+                  myHintText: "Username",
+                  textInputType: TextInputType.text),
               const SizedBox(height: 18),
               TextFildInput(
                 textEditingController: _passwordController,
@@ -52,8 +106,18 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 28),
               InkWell(
+                onTap: () async {
+                  String res = await AuthMethods().SignUpUser(
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                    username: _usernameController.text,
+                    fullname: _fullnameController.text,
+                    file: _image!,
+                  );
+                  Navigator.pushNamed(context, '/loginPage');
+                },
                 child: Container(
-                  child: const Text("Log In"),
+                  child: const Text("Sign Up"),
                   width: double.infinity,
                   alignment: Alignment.center,
                   padding: const EdgeInsets.symmetric(vertical: 12),
@@ -73,19 +137,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    child: const Text("Don't have an account?"),
+                    child: const Text("Have an account?"),
                     padding: const EdgeInsets.symmetric(
                       vertical: 8,
                     ),
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/signUpPage');
+                      Navigator.pushNamed(context, '/loginPage');
                     },
                     child: Container(
                       margin: const EdgeInsets.only(left: 5),
                       child: const Text(
-                        "Sign up",
+                        "Log in",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: blueColor),
                       ),

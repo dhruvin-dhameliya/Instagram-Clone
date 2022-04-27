@@ -14,7 +14,7 @@ class TextFildInput extends StatelessWidget {
       required this.textInputType})
       : super(key: key);
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     final inputBorder =
         OutlineInputBorder(borderSide: Divider.createBorderSide(context));
@@ -26,7 +26,7 @@ class TextFildInput extends StatelessWidget {
         focusedBorder: inputBorder,
         enabledBorder: inputBorder,
         filled: true,
-        contentPadding: EdgeInsets.all(8),
+        contentPadding: const EdgeInsets.all(8),
       ),
       keyboardType: textInputType,
       obscureText: isPass,
