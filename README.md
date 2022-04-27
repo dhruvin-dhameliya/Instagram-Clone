@@ -1,5 +1,7 @@
 # Instagram Clone with Flutter + Firebase
 
+It created an Instagram clone using the Flutter framework and also backend connect with Firebase. 
+
 ## Getting Started
 
 This project is a basic to advance create Colne helping...
