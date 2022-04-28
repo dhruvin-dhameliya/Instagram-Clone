@@ -21,6 +21,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _fullnameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   Uint8List? _image;
+  bool _isLoding = false;
 
   @override
   void dispose() {
@@ -39,6 +40,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
   }
 
+  void signUpUser() async {
+    setState(() {
+      _isLoding = true;
+    });
+    String res = await AuthMethods().SignUpUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+      username: _usernameController.text,
+      fullname: _fullnameController.text,
+      file: _image!,
+    );
+
+    if (res != 'Success') {
+      showsSnacBar(res, context);
+    }
+    setState(() {
+      _isLoding = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +71,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Flexible(child: Container(), flex: 2),
+              Flexible(child: Container(), flex: 1),
               SvgPicture.asset(
                 'assets/img/ic_instagram.svg',
                 color: primaryColor,
@@ -117,7 +138,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Navigator.pushNamed(context, '/loginPage');
                 },
                 child: Container(
-                  child: const Text("Sign Up"),
+                  child: _isLoding
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text("Sign Up"),
                   width: double.infinity,
                   alignment: Alignment.center,
                   padding: const EdgeInsets.symmetric(vertical: 12),

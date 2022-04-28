@@ -37,15 +37,15 @@ class MyApp extends StatelessWidget {
       title: 'Instagram Clone',
       theme: ThemeData.dark()
           .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
-      // home: const ResponsiveLayout(
-      //   webScreenLayout: webScreenLayout(),
-      //   mobailScreenLayout: mobailScreenLayout(),
-      // ),
-      home: const SignUpScreen(),
-      initialRoute: '/signUpPage',
+      home: const ResponsiveLayout(
+        webScreenLayout: webScreenLayout(),
+        mobailScreenLayout: mobailScreenLayout(),
+      ),
+      // home: const SignUpScreen(),
+      initialRoute: '/loginPage',
       routes: {
-        '/loginPage': (context) => LoginScreen(),
-        '/signUpPage': (context) => SignUpScreen(),
+        '/loginPage': (context) => const LoginScreen(),
+        '/signUpPage': (context) => const SignUpScreen(),
       },
     );
   }
