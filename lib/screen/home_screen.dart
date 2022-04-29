@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-class mobailScreenLayout extends StatelessWidget {
-  const mobailScreenLayout({Key? key}) : super(key: key);
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
         child: Text(
-          "It is mobile layout",
+          "This is a Instagram Clone \n\nHome Screen ",
+          textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 25,
             color: Colors.white,

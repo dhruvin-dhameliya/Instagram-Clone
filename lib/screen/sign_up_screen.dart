@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instaclon_flutterfire/resources/auth_method.dart';
+import 'package:instaclon_flutterfire/responsive/mobail_screen_layout.dart';
+import 'package:instaclon_flutterfire/responsive/web_screen_layout.dart';
+import 'package:instaclon_flutterfire/screen/login_screen.dart';
 import 'package:instaclon_flutterfire/util/colors.dart';
 import 'package:instaclon_flutterfire/util/util.dart';
 import 'package:instaclon_flutterfire/widgets/text_fild_input.dart';
+
+import '../responsive/responsive_layout_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -21,7 +26,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _fullnameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   Uint8List? _image;
-  bool _isLoding = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -34,7 +39,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void selectImage() async {
     Uint8List im = await pickImage(ImageSource.gallery);
-    // Uint8List im2 = await pickImage(ImageSource.camera);
     setState(() {
       _image = im;
     });
@@ -42,7 +46,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void signUpUser() async {
     setState(() {
-      _isLoding = true;
+      _isLoading = true;
     });
     String res = await AuthMethods().SignUpUser(
       email: _emailController.text,
@@ -52,11 +56,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
       file: _image!,
     );
 
-    if (res != 'Success') {
-      showsSnacBar(res, context);
+    if (res == 'Success') {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const ResponsiveLayout(
+            webScreenLayout: webScreenLayout(),
+            mobailScreenLayout: mobailScreenLayout(),
+          ),
+        ),
+      );
+    } else {
+      showsSnackBar(res, context);
     }
     setState(() {
-      _isLoding = false;
+      _isLoading = false;
     });
   }
 
@@ -127,18 +140,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               const SizedBox(height: 28),
               InkWell(
-                onTap: () async {
-                  String res = await AuthMethods().SignUpUser(
-                    email: _emailController.text,
-                    password: _passwordController.text,
-                    username: _usernameController.text,
-                    fullname: _fullnameController.text,
-                    file: _image!,
-                  );
-                  Navigator.pushNamed(context, '/loginPage');
-                },
+                onTap: signUpUser,
                 child: Container(
-                  child: _isLoding
+                  child: _isLoading
                       ? const Center(
                           child: CircularProgressIndicator(
                             color: Colors.white,
@@ -171,7 +175,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/loginPage');
+                      // Navigator.pushNamed(context, '/loginPage');
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
                     },
                     child: Container(
                       margin: const EdgeInsets.only(left: 5),

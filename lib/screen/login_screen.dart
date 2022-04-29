@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:instaclon_flutterfire/resources/auth_method.dart';
+import 'package:instaclon_flutterfire/screen/sign_up_screen.dart';
 import 'package:instaclon_flutterfire/util/colors.dart';
 import 'package:instaclon_flutterfire/util/util.dart';
 import 'package:instaclon_flutterfire/widgets/text_fild_input.dart';
+
+import '../responsive/mobail_screen_layout.dart';
+import '../responsive/responsive_layout_screen.dart';
+import '../responsive/web_screen_layout.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -15,7 +20,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isLoding = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -26,16 +31,26 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void loginUser() async {
     setState(() {
-      _isLoding = true;
+      _isLoading = true;
     });
     String res2 = await AuthMethods().loginUser(
-        email: _emailController.text, password: _passwordController.text);
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
     if (res2 == "Success") {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const ResponsiveLayout(
+            webScreenLayout: webScreenLayout(),
+            mobailScreenLayout: mobailScreenLayout(),
+          ),
+        ),
+      );
     } else {
-      showsSnacBar(res2, context);
+      showsSnackBar(res2, context);
     }
     setState(() {
-      _isLoding = false;
+      _isLoading = false;
     });
   }
 
@@ -72,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
               InkWell(
                 onTap: loginUser,
                 child: Container(
-                  child: _isLoding
+                  child: _isLoading
                       ? const Center(
                           child: CircularProgressIndicator(
                             color: Colors.white,
@@ -105,7 +120,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/signUpPage');
+                      // Navigator.pushNamed(context, '/signUpPage');
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => const SignUpScreen(),
+                        ),
+                      );
                     },
                     child: Container(
                       margin: const EdgeInsets.only(left: 5),
