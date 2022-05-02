@@ -16,7 +16,6 @@ class webScreenLayout extends StatelessWidget {
       // ),
 
       body: HomeScreen(),
-
     );
   }
 }
