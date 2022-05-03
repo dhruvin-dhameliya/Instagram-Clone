@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:instaclon_flutterfire/providers/use_providerr.dart';
-import 'package:instaclon_flutterfire/util/dimention.dart';
+import 'package:instaclon_flutterfire/util/global_varibles.dart';
 import 'package:provider/provider.dart';
 
 class ResponsiveLayout extends StatefulWidget {
