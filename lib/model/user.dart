@@ -33,17 +33,17 @@ class User {
       };
 
   static User fromSnap(DocumentSnapshot snap) {
-    var snapshort = snap.data() as Map<String, dynamic>;
+    var snapshot = snap.data() as Map<String, dynamic>;
 
     return User(
-      username: snapshort['username'],
-      uid: snapshort['uid'],
-      email: snapshort['email'],
-      fullname: snapshort['fullname'],
-      password: snapshort['password'],
-      photoUrl: snapshort['photoUrl'],
-      followers: snapshort['followers'],
-      following: snapshort['following'],
+      username: snapshot['username'],
+      uid: snapshot['uid'],
+      email: snapshot['email'],
+      fullname: snapshot['fullname'],
+      password: snapshot['password'],
+      photoUrl: snapshot['photoUrl'],
+      followers: snapshot['followers'],
+      following: snapshot['following'],
     );
   }
 }

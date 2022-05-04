@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instaclon_flutterfire/providers/use_providerr.dart';
+import 'package:instaclon_flutterfire/resources/firestore_method.dart';
 import 'package:instaclon_flutterfire/util/util.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,40 @@ class AddPostScrren extends StatefulWidget {
 class _AddPostScrrenState extends State<AddPostScrren> {
   Uint8List? _file;
   final TextEditingController _discriptionController = TextEditingController();
+  bool _isLoding = false;
+
+  void postImage(
+    String uid,
+    String username,
+    String profImage,
+  ) async {
+    setState(() {
+      _isLoding = true;
+    });
+    try {
+      String res = await FirestoreMethod().uploadPost(
+        _discriptionController.text,
+        _file!,
+        uid,
+        username,
+        profImage,
+      );
+      if (res == "Success") {
+        setState(() {
+          _isLoding = false;
+        });
+        showsSnackBar("Posted!", context);
+        clearImage();
+      } else {
+        setState(() {
+          _isLoding = false;
+        });
+        showsSnackBar(res, context);
+      }
+    } catch (e) {
+      showsSnackBar(e.toString(), context);
+    }
+  }
 
   _selectImage(BuildContext context) async {
     return showDialog(
@@ -106,6 +141,18 @@ class _AddPostScrrenState extends State<AddPostScrren> {
     );
   }
 
+  void clearImage() {
+    setState(() {
+      _file = null;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _discriptionController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final User user = Provider.of<UserProvider>(context).getUser;
@@ -127,14 +174,13 @@ class _AddPostScrrenState extends State<AddPostScrren> {
               backgroundColor: mobileBackgroundColor,
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () {},
+                onPressed: clearImage,
               ),
               title: const Text("Post to"),
               actions: [
                 TextButton(
-                  onPressed: () {
-                    _selectImage(context);
-                  },
+                  onPressed: () =>
+                      postImage(user.uid, user.username, user.photoUrl),
                   child: const Text(
                     'Post',
                     style: TextStyle(
@@ -148,6 +194,12 @@ class _AddPostScrrenState extends State<AddPostScrren> {
             ),
             body: Column(
               children: [
+                _isLoding
+                    ? const LinearProgressIndicator()
+                    : const Padding(
+                        padding: EdgeInsets.only(top: 0),
+                      ),
+                const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
